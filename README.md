@@ -17,22 +17,17 @@ Run in Claude Code:
 
 ### Claude Code cloud sessions
 
-Cloud sessions, including Claude Code on the web, don't run `/plugin` and don't install plugins that a repository enables in `.claude/settings.json`. Add pstack to your claude.ai account instead, and it syncs into every session you start with that account:
-
-1. Open [Customize > Plugins](https://claude.ai/customize/plugins) on claude.ai.
-2. Select **Add > Add marketplace** and enter `michael-denyer/pstack-claude`.
-3. Add **pstack** from that marketplace, and turn on **Sync automatically** to receive new releases.
-
-New sessions load it as `pstack@synced`; in a session that was already open, run `/reload-plugins`. On Team and Enterprise plans, an Owner may need to allow members to add marketplaces.
-
-If you can't add it to your account, install it from the cloud environment's setup script instead:
+Cloud sessions, including Claude Code on the web, don't run `/plugin` and don't install plugins that a repository enables in `.claude/settings.json`. A plugin added to your claude.ai account under Customize > Plugins didn't reach a new cloud session either. Install pstack from the cloud environment's setup script instead. Open the environment menu in the session's title bar, select **Edit**, and paste this under **Setup script**:
 
 ```shell
+#!/bin/bash
 claude plugin marketplace add michael-denyer/pstack-claude || true
 claude plugin install pstack@pstack-claude || true
 ```
 
-Use one route, not both: an installed copy takes precedence over the synced one. Each cloud session starts on a fresh VM, so the `pstack-models.md` sheet that `setup-pstack` writes doesn't carry over. If you change model defaults, have the setup script write the sheet too.
+The script runs before Claude Code starts, and the environment caches its result, so later sessions start with pstack installed. Start a new session and type `/pstack:poteto-mode` to check. The cache rebuilds when you edit the script and about every seven days, which is when a new pstack release arrives.
+
+Each cloud session starts on a fresh VM, so the `pstack-models.md` sheet that `setup-pstack` writes doesn't carry over. If you change model defaults, have the setup script write the sheet to `~/.claude/pstack-models.md` too.
 
 ### Codex
 
